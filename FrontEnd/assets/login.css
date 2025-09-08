@@ -1,0 +1,136 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+	max-width: 1140px;
+	margin:auto;
+	font-family: 'Work Sans' ;
+	font-size: 14px;
+}
+header {
+	display: flex;
+	justify-content: space-between;
+	margin: 50px 0
+}
+section {
+	margin: 50px 0
+}
+
+h1{
+	display: flex;
+	flex-direction: column;
+	font-family: 'Syne';
+	font-size: 22px;
+	font-weight: 800;
+	color: #B1663C
+}
+
+h1 > span {
+	font-family: 'Work Sans';
+	font-size:10px;
+	letter-spacing: 0.1em;
+;
+}
+
+h2{
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 30px;
+	color: #1D6154
+}
+nav ul {
+	display: flex;
+	align-items: center;
+	list-style-type: none;
+
+}
+nav li {
+	padding: 0 10px;
+	font-size: 1.2em;
+}
+
+nav ul li a {
+	text-decoration: none;
+	color: black;
+}
+
+nav ul li a:hover {
+	color: #B1663C;
+}
+
+li:hover {
+	color: #B1663C;
+}
+
+
+main {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+main h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 30px;
+}
+
+main form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+main form label {
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+main form input {
+    margin-bottom: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 379px;
+}
+
+main form button {
+    padding: 10px;
+    background-color: #1D6154;
+    color: white;
+    border: none;
+    border-radius: 60px;
+    font-size: 14px;
+    cursor: pointer;
+    height: 36px;
+    width: 50%;
+    align-self: center;
+    text-decoration: none;
+    font-family: 'Syne';
+}
+
+main form a {
+    font-size: 14px; 
+    text-align: center;
+    margin-top: 20px;
+    color: #1D6154;
+    text-decoration: none;
+    font-weight: none;
+}
+
+
+footer {
+    width: 100%;
+    text-align: right;
+    margin: 50px 0;
+}
+footer nav ul {
+	display: flex;
+	justify-content: flex-end;
+    margin-top: 250px;
+}
