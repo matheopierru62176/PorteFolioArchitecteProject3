@@ -8,6 +8,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
     <title>Login</title>
     <link rel="stylesheet" href="./assets/login.css">
+    <script defer src="./assets/Script/login.js"></script>
 </head>
 <body>
     <header>
@@ -31,6 +32,8 @@
 
                 <label for="password">Mot de passe:</label>
                 <input type="password" id="password" name="password" required>
+
+                <div id="error-message" style="color: red; display: none; margin-bottom: 12px;"></div>
 
                 <button type="submit">Se connecter</button>
 
