@@ -98,4 +98,121 @@ function setActiveFilter(activeBtn) {
 // Lance la récupération au chargement
 FetchTravauxEtCategories();
 
-localStorage.getItem('token');
+
+
+// Gestion du lien de connexion/déconnexion
+document.addEventListener('DOMContentLoaded', () => {
+    // Récupération du lien de connexion/déconnexion
+    const loginLink = document.querySelector('nav ul li a[href="./login.html"]');
+    const modifyBtn = document.getElementById('modify-btn');
+    const filtersDiv = document.querySelector('.filters');
+
+    if (localStorage.getItem('token')) {
+        loginLink.textContent = 'logout';
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            window.location.reload();
+        });
+
+        // Afficher le bouton modifier quand connecté
+        modifyBtn.style.display = 'flex';
+        // Cacher les filtres quand connecté
+        filtersDiv.style.display = 'none';
+    } else {
+        // Cacher le bouton modifier quand déconnecté
+        modifyBtn.style.display = 'none';
+        // Afficher les filtres quand déconnecté
+        filtersDiv.style.display = 'flex';
+    }
+});
+
+
+
+
+// Gestion de la modale
+// Récupération des éléments de la modale
+const modal = document.getElementById("modal-galery");
+const modalImg = document.getElementById("img01");
+const captionText = document.getElementById("caption");
+const closeBtn = document.getElementsByClassName("close")[0];
+
+// Gestion du modal d'édition
+const editModal = document.getElementById("edit-modal");
+const modifyBtn = document.getElementById("modify-btn");
+const closeEditBtn = document.querySelector(".close-edit");
+const galleryEdit = document.querySelector(".gallery-edit");
+
+// Ouvrir le modal d'édition
+modifyBtn.addEventListener('click', () => {
+    editModal.style.display = "block";
+    loadWorksInEditModal();
+});
+
+// Fermer le modal d'édition
+closeEditBtn.addEventListener('click', () => {
+    editModal.style.display = "none";
+});
+
+// Fermer le modal en cliquant en dehors
+window.addEventListener('click', (event) => {
+    if (event.target === editModal) {
+        editModal.style.display = "none";
+    }
+});
+
+
+// Charger les travaux dans le modal d'édition
+function loadWorksInEditModal() {
+    galleryEdit.innerHTML = '';
+    allWorks.forEach(work => {
+        const div = document.createElement('div');
+        div.className = 'gallery-edit-item';
+        div.innerHTML = `
+            <img src="${work.imageUrl}" alt="${work.title}">
+            <button class="delete-btn" data-work-id="${work.id}">🗑</button>
+        `;
+        galleryEdit.appendChild(div);
+    });
+
+    // Ajouter les écouteurs pour les boutons de suppression
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const workId = e.target.getAttribute('data-work-id');
+            deleteWork(workId);
+        });
+    });
+}
+
+// Fonction pour supprimer un travail
+function deleteWork(workId) {
+    const token = localStorage.getItem('token');
+    // Vérifie si l'utilisateur est connecté
+    if (!token) {
+        alert('Vous devez être connecté pour supprimer un élément');
+        return;
+    }
+
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
+        fetch(`http://localhost:5678/api/works/${workId}`, {
+            method: 'DELETE',
+            headers: {
+                // Vérification du token coté serveur
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Recharger les données
+                    FetchTravauxEtCategories();
+                    loadWorksInEditModal();
+                } else {
+                    alert('Erreur lors de la suppression');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la suppression');
+            });
+    }
+}
