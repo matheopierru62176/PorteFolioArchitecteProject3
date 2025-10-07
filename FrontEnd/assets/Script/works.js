@@ -205,8 +205,8 @@ function loadWorksInEditModal() {
 
     // Ajouter les écouteurs pour les boutons de suppression (nouvellement rendus)
     galleryEditCurrent.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const workId = e.target.getAttribute('data-work-id');
+        btn.addEventListener('click', (event) => {
+            const workId = event.target.getAttribute('data-work-id');
             deleteWork(workId);
         });
     });
@@ -321,9 +321,9 @@ async function openAddPhotoForm() {
         imagePreview.innerHTML = '';
 
         const reader = new FileReader();
-        reader.onload = (ev) => {
+        reader.onload = (event) => {
             const img = document.createElement('img');
-            img.src = ev.target.result;
+            img.src = event.target.result;
             img.style.maxWidth = '100%';
             img.style.maxHeight = '200px';
             imagePreview.appendChild(img);
@@ -345,6 +345,7 @@ async function openAddPhotoForm() {
 
         try {
             const resp = await fetch('http://localhost:5678/api/works', {
+                //Post permet d'envoyer des données au serveur
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
