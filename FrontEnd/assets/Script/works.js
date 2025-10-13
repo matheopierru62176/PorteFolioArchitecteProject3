@@ -333,9 +333,9 @@ async function openAddPhotoForm() {
             imageInput.value = '';
             return;
         }
-        const maxSize = 5 * 1024 * 1024; // 5MB
+        const maxSize = 4 * 1024 * 1024; // 4MB
         if (file.size > maxSize) {
-            alert('Fichier trop volumineux (max 5MB).');
+            alert('Fichier trop volumineux (max 4MB).');
             imageInput.value = '';
             return;
         }

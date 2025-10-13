@@ -269,8 +269,7 @@ footer nav ul {
 	display: flex;
 	align-items: center;
 	padding: 30px 30px 20px;
-	position: relative;
-	/* needed so the title can be absolutely centered */
+	position: relative; /* needed so the title can be absolutely centered */
 }
 
 .modal-header h3 {
@@ -279,13 +278,11 @@ footer nav ul {
 	font-weight: 400;
 	color: #000;
 	margin: 0;
-	position: absolute;
-	/* center regardless of left/right controls */
+	position: absolute; /* center regardless of left/right controls */
 	left: 50%;
 	transform: translateX(-50%);
 	text-align: center;
-	pointer-events: none;
-	/* allow clicks through to close/back when necessary */
+	pointer-events: none; /* allow clicks through to close/back when necessary */
 }
 
 /* Back arrow button shown in the edit modal header (created dynamically via JS) */
@@ -307,7 +304,7 @@ footer nav ul {
 }
 
 .modal-header .close-edit {
-	margin-left: auto;
+    margin-left: auto;
 }
 
 .close-edit:hover {
@@ -477,23 +474,6 @@ footer nav ul {
 	height: 1px;
 	background-color: #B3B3B3;
 	margin: 20px 0;
-}
-
-/* Responsive pour la modal et le formulaire */
-@media (max-width: 600px) {
-	.modal-content-edit {
-		width: 95%;
-		margin: 8% auto;
-	}
-
-	.gallery-edit {
-		grid-template-columns: repeat(3, 1fr);
-		gap: 10px;
-	}
-
-	#add-photo-form {
-		width: 100%;
-	}
 }
 
 /* Conteneur et bouton d'upload dynamiques pour le formulaire d'ajout */
