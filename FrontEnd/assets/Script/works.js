@@ -276,20 +276,27 @@ async function openAddPhotoForm() {
 
     editModalBody.innerHTML = `
         <form id="add-photo-form">
-            <label for="image">Image (jpg, png) :</label>
-            <input type="file" id="image" name="image" accept="image/png, image/jpeg" required>
-            <div id="image-preview" style="margin-top: 10px;"></div>
+            <div id="image-container" class="image-container">
+                <label class="image-upload-button" for="image">
+                    <span class="upload-icon">＋</span>
+                    <span class="upload-text">Ajouter une image</span>
+                    <label for="image">jpg, png : 4mo max</label>
+
+                </label>
+                <input type="file" id="image" name="image" accept="image/png, image/jpeg" required style="display:none">
+            </div>
 
             <label for="title">Titre :</label>
             <input type="text" id="title" name="title" required>
 
             <label for="category">Catégorie :</label>
             <select id="category" name="category" required>
-                <option value="">--Sélectionner une catégorie--</option>
+                <option value=""></option>
                 ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
             </select>
 
-            <button type="submit">Ajouter</button>
+            <div class="trait"></div>
+            <button type="submit">Valider</button>
         </form>
         <!-- back button removed: UI uses a back-arrow in modal header -->
     `;
@@ -299,7 +306,7 @@ async function openAddPhotoForm() {
 
     // éléments du DOM
     const imageInput = document.getElementById('image');
-    const imagePreview = document.getElementById('image-preview');
+    const imageContainer = document.getElementById('image-container');
     const form = document.getElementById('add-photo-form');
 
     // Créer / insérer une flèche de retour dans l'entête du modal (si présent)
@@ -315,21 +322,45 @@ async function openAddPhotoForm() {
 
 
     //Documentation de FileReader : https://developer.mozilla.org/fr/docs/Web/API/FileReader
-    // Affiche l'image quand on l'insert dans le formulaire
+    // Affiche l'image quand on l'insert dans le formulaire ; remplace le bouton dans #image-container
     imageInput.addEventListener('change', (event) => {
         const file = event.currentTarget && event.currentTarget.files ? event.currentTarget.files[0] : null;
-        imagePreview.innerHTML = '';
+        if (!file) return;
+
+        // validations
+        if (!file.type || !file.type.match('image.*')) {
+            alert('Format de fichier non supporté. Utilisez jpg/png/webp.');
+            imageInput.value = '';
+            return;
+        }
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            alert('Fichier trop volumineux (max 5MB).');
+            imageInput.value = '';
+            return;
+        }
 
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = (ev) => {
+            imageContainer.innerHTML = '';
             const img = document.createElement('img');
-            img.src = event.target.result;
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '200px';
-            imagePreview.appendChild(img);
+            img.src = ev.target.result;
+            img.className = 'image-preview-img';
+            imageContainer.appendChild(img);
+
+            // conserver l'input (caché) dans le container pour permettre de re-sélectionner une image
+            imageInput.style.display = 'none';
+            imageContainer.appendChild(imageInput);
+
+            // rendre l'image cliquable pour réouvrir le sélecteur de fichiers
+            img.style.cursor = 'pointer';
+            img.title = 'Cliquer pour remplacer l\'image';
+            img.addEventListener('click', () => imageInput.click());
         };
         reader.readAsDataURL(file);
     });
+
+    // (aucun stub nécessaire) 
 
     // soumission du formulaire - envoi multipart/form-data
     form.addEventListener('submit', async (event) => {

@@ -269,6 +269,8 @@ footer nav ul {
 	display: flex;
 	align-items: center;
 	padding: 30px 30px 20px;
+	position: relative;
+	/* needed so the title can be absolutely centered */
 }
 
 .modal-header h3 {
@@ -276,9 +278,14 @@ footer nav ul {
 	font-size: 26px;
 	font-weight: 400;
 	color: #000;
-
 	margin: 0;
+	position: absolute;
+	/* center regardless of left/right controls */
+	left: 50%;
+	transform: translateX(-50%);
 	text-align: center;
+	pointer-events: none;
+	/* allow clicks through to close/back when necessary */
 }
 
 /* Back arrow button shown in the edit modal header (created dynamically via JS) */
@@ -297,6 +304,10 @@ footer nav ul {
 	font-weight: bold;
 	cursor: pointer;
 	color: #000;
+}
+
+.modal-header .close-edit {
+	margin-left: auto;
 }
 
 .close-edit:hover {
@@ -386,4 +397,160 @@ footer nav ul {
 
 .has-admin {
 	padding-top: 44px;
+}
+
+/* Styles pour le formulaire d'ajout de photo dans la modal d'édition */
+#add-photo-form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	max-width: 480px;
+	margin: 0 auto;
+}
+
+#add-photo-form label {
+	font-family: 'Work Sans';
+	font-weight: 700;
+	font-size: 14px;
+}
+
+#add-photo-form input[type="file"] {
+	padding: 10px;
+	border: 1px dashed #d8d8d8;
+	border-radius: 8px;
+	background: #fafafa;
+	cursor: pointer;
+}
+
+#image-preview {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 80px;
+	border: 1px dashed #e0e0e0;
+	border-radius: 8px;
+	padding: 10px;
+	background: #fff;
+	overflow: hidden;
+}
+
+#image-preview img {
+	max-width: 100%;
+	max-height: 240px;
+	object-fit: contain;
+	border-radius: 6px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#add-photo-form input[type="text"],
+#add-photo-form select {
+	padding: 10px 12px;
+	border: 1px solid #d0d0d0;
+	font-size: 14px;
+}
+
+#add-photo-form input[type="text"]:focus,
+#add-photo-form select:focus,
+#add-photo-form input[type="file"]:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(29, 97, 84, 0.08);
+}
+
+#add-photo-form button[type="submit"] {
+	background: #1D6154;
+	color: white;
+	border: none;
+	padding: 12px 24px;
+	border-radius: 60px;
+	font-family: 'Syne';
+	font-weight: 700;
+	cursor: pointer;
+	align-self: center;
+	transition: background-color 0.2s ease;
+}
+
+#add-photo-form button[type="submit"]:hover {
+	background: #0f4c3a;
+}
+
+.trait {
+	height: 1px;
+	background-color: #B3B3B3;
+	margin: 20px 0;
+}
+
+/* Responsive pour la modal et le formulaire */
+@media (max-width: 600px) {
+	.modal-content-edit {
+		width: 95%;
+		margin: 8% auto;
+	}
+
+	.gallery-edit {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 10px;
+	}
+
+	#add-photo-form {
+		width: 100%;
+	}
+}
+
+/* Conteneur et bouton d'upload dynamiques pour le formulaire d'ajout */
+.image-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 180px;
+	border: 1px dashed #e0e0e0;
+	border-radius: 8px;
+	background: #fafafa;
+	position: relative;
+	overflow: hidden;
+}
+
+.image-upload-button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	color: #1D6154;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.image-upload-button .upload-icon {
+	font-size: 28px;
+	line-height: 1;
+}
+
+.image-upload-button .upload-text {
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.image-preview-img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+	display: block;
+}
+
+.replace-image-btn {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	background: rgba(0, 0, 0, 0.6);
+	color: #fff;
+	border: none;
+	padding: 6px 10px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.replace-image-btn:hover {
+	background: rgba(0, 0, 0, 0.8);
 }
