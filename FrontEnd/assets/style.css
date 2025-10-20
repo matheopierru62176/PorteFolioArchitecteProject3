@@ -269,7 +269,8 @@ footer nav ul {
 	display: flex;
 	align-items: center;
 	padding: 30px 30px 20px;
-	position: relative; /* needed so the title can be absolutely centered */
+	position: relative;
+	/* needed so the title can be absolutely centered */
 }
 
 .modal-header h3 {
@@ -278,11 +279,14 @@ footer nav ul {
 	font-weight: 400;
 	color: #000;
 	margin: 0;
-	position: absolute; /* center regardless of left/right controls */
+	position: absolute;
+	/* center regardless of left/right controls */
 	left: 50%;
+	top: 60px;
 	transform: translateX(-50%);
 	text-align: center;
-	pointer-events: none; /* allow clicks through to close/back when necessary */
+	pointer-events: none;
+	/* allow clicks through to close/back when necessary */
 }
 
 /* Back arrow button shown in the edit modal header (created dynamically via JS) */
@@ -304,7 +308,7 @@ footer nav ul {
 }
 
 .modal-header .close-edit {
-    margin-left: auto;
+	margin-left: auto;
 }
 
 .close-edit:hover {
@@ -318,7 +322,7 @@ footer nav ul {
 .gallery-edit {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
-	gap: 15px;
+	gap: 2px;
 	margin-bottom: 30px;
 }
 
@@ -327,15 +331,16 @@ footer nav ul {
 }
 
 .gallery-edit-item img {
-	width: 100%;
-	height: 100px;
+	width: 76.86px;
+	height: 102.57px;
 	object-fit: cover;
+	margin-bottom: 30px;
 }
 
 .delete-btn {
 	position: absolute;
 	top: 5px;
-	right: 5px;
+	right: 37px;
 	background: #000;
 	color: white;
 	border: none;
@@ -409,6 +414,7 @@ footer nav ul {
 	font-family: 'Work Sans';
 	font-weight: 700;
 	font-size: 14px;
+	margin-top: 20px;
 }
 
 #add-photo-form input[type="file"] {
@@ -442,7 +448,8 @@ footer nav ul {
 #add-photo-form input[type="text"],
 #add-photo-form select {
 	padding: 10px 12px;
-	border: 1px solid #d0d0d0;
+	border: 1px solid white;
+	box-shadow: 0px 0px 0px 1px rgba(29, 97, 84, 0.08);
 	font-size: 14px;
 }
 
@@ -470,6 +477,20 @@ footer nav ul {
 	background: #0f4c3a;
 }
 
+/* Disabled state: grey and not clickable */
+#add-photo-form button[type="submit"]:disabled {
+	background: #cfcfcf;
+	color: #666666;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+/* Optional: explicit enabled state for smoother transition */
+#add-photo-form button[type="submit"]:not(:disabled) {
+	background: #1D6154;
+	color: white;
+}
+
 .trait {
 	height: 1px;
 	background-color: #B3B3B3;
@@ -485,9 +506,10 @@ footer nav ul {
 	height: 180px;
 	border: 1px dashed #e0e0e0;
 	border-radius: 8px;
-	background: #fafafa;
+	background: #E8F1F6;
 	position: relative;
 	overflow: hidden;
+	margin-top: 10px;
 }
 
 .image-upload-button {
@@ -496,19 +518,33 @@ footer nav ul {
 	align-items: center;
 	justify-content: center;
 	gap: 6px;
-	color: #1D6154;
 	cursor: pointer;
 	text-decoration: none;
 }
 
 .image-upload-button .upload-icon {
-	font-size: 28px;
+	font-size: 76px;
+	color: #B9C5CC;
 	line-height: 1;
 }
 
 .image-upload-button .upload-text {
+	border: 1px solid #B9C5CC;
+	background-color: #B9C5CC;
+	border-radius: 40px;
+	height: 26px;
+	width: 170px;
+	color: #306685;
+	text-align: center;
+	padding-top: 10px;
 	font-size: 14px;
 	font-weight: 700;
+}
+
+.image-upload-button .taille {
+	font-size: 10px !important;
+	color: #808080;
+	margin-top: 0 !important ;
 }
 
 .image-preview-img {

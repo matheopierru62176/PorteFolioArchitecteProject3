@@ -11,6 +11,7 @@ fetch('http://localhost:5678/api/works')
         gallery.innerHTML = ''; // Vide la galerie
         data.forEach(work => {
             const figure = document.createElement('figure');
+            figure.dataset.workId = work.id;
             const img = document.createElement('img');
             img.src = work.imageUrl;
             img.alt = work.title;
@@ -48,6 +49,7 @@ function AfficheTravaux(works) {
     gallery.innerHTML = '';
     works.forEach(work => {
         const figure = document.createElement('figure');
+        figure.dataset.workId = work.id;
         const img = document.createElement('img');
         img.src = work.imageUrl;
         img.alt = work.title;
@@ -168,6 +170,15 @@ modifyBtn.addEventListener('click', () => {
     loadWorksInEditModal();
 });
 
+// Permettre à l'icône stylo dans la barre admin d'ouvrir aussi la modal d'édition
+const adminPenIcon = document.querySelector('#admin-bar .fa-pen-to-square');
+adminPenIcon.style.cursor = 'pointer';
+adminPenIcon.addEventListener('click', () => {
+    editModal.style.display = "block";
+    loadWorksInEditModal();
+});
+
+
 // Fermer le modal d'édition
 closeEditBtn.addEventListener('click', () => {
     editModal.style.display = "none";
@@ -198,7 +209,7 @@ function loadWorksInEditModal() {
         div.className = 'gallery-edit-item';
         div.innerHTML = `
             <img src="${work.imageUrl}" alt="${work.title}">
-            <button class="delete-btn" data-work-id="${work.id}">🗑</button>
+            <button class="delete-btn" data-work-id="${work.id}"><i class="fa-solid fa-trash"></i></button>
         `;
         galleryEditCurrent.appendChild(div);
     });
@@ -206,7 +217,12 @@ function loadWorksInEditModal() {
     // Ajouter les écouteurs pour les boutons de suppression (nouvellement rendus)
     galleryEditCurrent.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (event) => {
-            const workId = event.target.getAttribute('data-work-id');
+            // event.target peut être l'icône <i>, utiliser currentTarget pour récupérer l'attribut du bouton
+            const workId = event.currentTarget.getAttribute('data-work-id');
+            if (!workId) {
+                console.error('delete-btn clicked but no data-work-id found', event);
+                return;
+            }
             deleteWork(workId);
         });
     });
@@ -231,9 +247,16 @@ function deleteWork(workId) {
         })
             .then(response => {
                 if (response.ok) {
-                    // Recharger les données
-                    FetchTravauxEtCategories();
-                    loadWorksInEditModal();
+                    // Mettre à jour localement sans re-fetch : retirer de allWorks
+                    allWorks = allWorks.filter(w => String(w.id) !== String(workId));
+
+                    // Retirer l'élément de la galerie principale (si présent)
+                    const mainFigure = document.querySelector(`.gallery figure[data-work-id="${workId}"]`);
+                    if (mainFigure && mainFigure.parentNode) mainFigure.parentNode.removeChild(mainFigure);
+
+                    // Retirer l'élément de la modal d'édition (si présent)
+                    const modalItem = document.querySelector(`.gallery-edit-item[data-work-id="${workId}"]`);
+                    if (modalItem && modalItem.parentNode) modalItem.parentNode.removeChild(modalItem);
                 } else {
                     alert('Erreur lors de la suppression');
                 }
@@ -278,9 +301,9 @@ async function openAddPhotoForm() {
         <form id="add-photo-form">
             <div id="image-container" class="image-container">
                 <label class="image-upload-button" for="image">
-                    <span class="upload-icon">＋</span>
-                    <span class="upload-text">Ajouter une image</span>
-                    <label for="image">jpg, png : 4mo max</label>
+                    <span class="upload-icon"><i class="fa-solid fa-image"></i></span>
+                    <span class="upload-text">+ Ajouter photo</span>
+                    <label class="taille" for="image">jpg, png : 4mo max</label>
 
                 </label>
                 <input type="file" id="image" name="image" accept="image/png, image/jpeg" required style="display:none">
@@ -302,12 +325,13 @@ async function openAddPhotoForm() {
     `;
 
     // Mettre à jour le titre du modal pour indiquer l'ajout
-    modalHeaderTitle.textContent = 'Ajout photo';
+    if (modalHeaderTitle) modalHeaderTitle.textContent = 'Ajout photo';
 
     // éléments du DOM
     const imageInput = document.getElementById('image');
     const imageContainer = document.getElementById('image-container');
     const form = document.getElementById('add-photo-form');
+    const submitButton = form.querySelector('button[type="submit"]');
 
     // Créer / insérer une flèche de retour dans l'entête du modal (si présent)
     let backArrow = document.querySelector('#edit-modal .modal-header .back-arrow');
@@ -316,27 +340,55 @@ async function openAddPhotoForm() {
         backArrow.className = 'back-arrow';
         backArrow.type = 'button';
         backArrow.title = 'Retour à la galerie';
-        backArrow.textContent = '←';
+        backArrow.innerHTML = '<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>';
         modalHeaderTitle.parentNode.insertBefore(backArrow, modalHeaderTitle);
     }
 
+    //Fonction helper pour activer/désactiver le bouton de soumission
+    function updateBoutonValide() {
+        //Récupérer les valeurs du formulaire
+        const fileSelected = imageInput.files && imageInput.files.length > 0;
+        const title = document.getElementById('title').value.trim();
+        const category = document.getElementById('category').value;
 
-    //Documentation de FileReader : https://developer.mozilla.org/fr/docs/Web/API/FileReader
+        let fileValid = false;
+        if (fileSelected) {
+            const f = imageInput.files[0];
+            const maxSize = 4 * 1024 * 1024; // 4MB
+            if (f.type && f.type.match('image.*') && f.size <= maxSize) fileValid = true;
+        }
+
+        if (fileValid && title.length > 0 && category !== '') {
+            submitButton.removeAttribute('disabled');
+        } else {
+            submitButton.setAttribute('disabled', '');
+        }
+    }
+
+    // initialize button disabled
+    submitButton.setAttribute('disabled', '');
+
+    // Documentation de FileReader : https://developer.mozilla.org/fr/docs/Web/API/FileReader
     // Affiche l'image quand on l'insert dans le formulaire ; remplace le bouton dans #image-container
     imageInput.addEventListener('change', (event) => {
         const file = event.currentTarget && event.currentTarget.files ? event.currentTarget.files[0] : null;
-        if (!file) return;
+        if (!file) {
+            updateBoutonValide();
+            return;
+        }
 
         // validations
         if (!file.type || !file.type.match('image.*')) {
             alert('Format de fichier non supporté. Utilisez jpg/png/webp.');
             imageInput.value = '';
+            updateBoutonValide();
             return;
         }
         const maxSize = 4 * 1024 * 1024; // 4MB
         if (file.size > maxSize) {
             alert('Fichier trop volumineux (max 4MB).');
             imageInput.value = '';
+            updateBoutonValide();
             return;
         }
 
@@ -356,11 +408,15 @@ async function openAddPhotoForm() {
             img.style.cursor = 'pointer';
             img.title = 'Cliquer pour remplacer l\'image';
             img.addEventListener('click', () => imageInput.click());
+
+            updateBoutonValide();
         };
         reader.readAsDataURL(file);
     });
 
-    // (aucun stub nécessaire) 
+    // listen for changes to title/category to update state
+    document.getElementById('title').addEventListener('input', updateBoutonValide);
+    document.getElementById('category').addEventListener('change', updateBoutonValide);
 
     // soumission du formulaire - envoi multipart/form-data
     form.addEventListener('submit', async (event) => {
@@ -368,6 +424,12 @@ async function openAddPhotoForm() {
         const file = imageInput.files[0];
         const title = document.getElementById('title').value.trim();
         const category = document.getElementById('category').value;
+
+        // final guard
+        if (!file || !title || !category) {
+            alert('Veuillez remplir tous les champs avant de valider.');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('image', file);
@@ -414,6 +476,5 @@ async function openAddPhotoForm() {
             loadWorksInEditModal();
         });
     }
-
 
 }
