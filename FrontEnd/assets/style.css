@@ -324,6 +324,7 @@ footer nav ul {
 	grid-template-columns: repeat(5, 1fr);
 	gap: 2px;
 	margin-bottom: 30px;
+	padding-left: 60px;
 }
 
 .gallery-edit-item {
@@ -340,7 +341,7 @@ footer nav ul {
 .delete-btn {
 	position: absolute;
 	top: 5px;
-	right: 37px;
+	right: 30px;
 	background: #000;
 	color: white;
 	border: none;
