@@ -341,7 +341,7 @@ footer nav ul {
 .delete-btn {
 	position: absolute;
 	top: 5px;
-	right: 30px;
+	right: 28px;
 	background: #000;
 	color: white;
 	border: none;
@@ -496,6 +496,8 @@ footer nav ul {
 	height: 1px;
 	background-color: #B3B3B3;
 	margin: 20px 0;
+	margin-left: 80px;
+	width: 420px;
 }
 
 /* Conteneur et bouton d'upload dynamiques pour le formulaire d'ajout */
