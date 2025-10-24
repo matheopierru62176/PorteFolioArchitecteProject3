@@ -207,9 +207,11 @@ function loadWorksInEditModal() {
     allWorks.forEach(work => {
         const div = document.createElement('div');
         div.className = 'gallery-edit-item';
+        // set data-work-id on the container as well so it can be easily selected/removed later
+        div.dataset.workId = work.id;
         div.innerHTML = `
             <img src="${work.imageUrl}" alt="${work.title}">
-            <button class="delete-btn" data-work-id="${work.id}"><i class="fa-solid fa-trash"></i></button>
+            <button class="delete-btn" data-work-id="${work.id}"><i class="fa-solid fa-trash-can"></i></button>
         `;
         galleryEditCurrent.appendChild(div);
     });
@@ -258,7 +260,14 @@ function deleteWork(workId) {
                     const modalItem = document.querySelector(`.gallery-edit-item[data-work-id="${workId}"]`);
                     if (modalItem && modalItem.parentNode) modalItem.parentNode.removeChild(modalItem);
                 } else {
-                    alert('Erreur lors de la suppression');
+                    // Try to get server response body for more details
+                    response.text().then(text => {
+                        console.error('Erreur suppression:', response.status, text);
+                        alert(`Erreur lors de la suppression (${response.status})`);
+                    }).catch(() => {
+                        console.error('Erreur suppression, status:', response.status);
+                        alert('Erreur lors de la suppression');
+                    });
                 }
             })
             .catch(error => {
