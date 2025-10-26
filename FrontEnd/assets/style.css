@@ -499,6 +499,14 @@ footer nav ul {
 	width: 420px;
 }
 
+.trait-photo {
+	height: 1px;
+	background-color: #B3B3B3;
+	margin: 20px 0;
+	margin-left: 40px;
+	width: 420px;
+}
+
 /* Conteneur et bouton d'upload dynamiques pour le formulaire d'ajout */
 .image-container {
 	display: flex;

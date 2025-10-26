@@ -327,7 +327,7 @@ async function openAddPhotoForm() {
                 ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
             </select>
 
-            <div class="trait"></div>
+            <div class="trait-photo"></div>
             <button type="submit">Valider</button>
         </form>
         <!-- back button removed: UI uses a back-arrow in modal header -->
